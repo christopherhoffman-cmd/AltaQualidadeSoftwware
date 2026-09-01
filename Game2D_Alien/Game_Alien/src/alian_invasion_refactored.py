@@ -6,7 +6,7 @@ from game_event_handler import GameEventHandler
 from game_renderer import GameRenderer
 from settings import Settings
 from ship import Ship
-
+from fast_alien import FastAlien
 
 class AlienInvasion:
     """Gerencia o jogo e seus comportamentos."""
@@ -45,10 +45,11 @@ class AlienInvasion:
 
         # Gerencia a frota de alienígenas
         self.fleet_manager = FleetManager(
-            self.screen,
-            self.settings,
-            self.ship
-        )
+        self.screen,
+        self.settings,
+        self.ship,
+        FastAlien
+        )   
 
         # Gerencia os eventos do teclado e da janela
         self.event_handler = GameEventHandler(

@@ -7,16 +7,20 @@ from alien import Alien
 class FleetManager:
     """Responsável por criar e gerenciar a frota de alienígenas."""
 
-    def __init__(self, screen, settings, ship) -> None:
+    def __init__(self, screen, settings, ship, alien_class=Alien) -> None:
         self.screen = screen
         self.settings = settings
         self.ship = ship
         self.aliens = pygame.sprite.Group()
+        self.alien_class = alien_class
 
     def create_fleet(self) -> None:
         """Cria uma frota de alienígenas."""
 
-        alien = Alien(self.screen, self.settings)
+        alien = self.alien_class(
+            self.screen,
+            self.settings
+        )
 
         alien_width = alien.rect.width
         alien_height = alien.rect.height
@@ -41,7 +45,7 @@ class FleetManager:
 
             for alien_number in range(number_aliens_x):
 
-                alien = Alien(
+                alien = self.alien_class(
                     self.screen,
                     self.settings
                 )
