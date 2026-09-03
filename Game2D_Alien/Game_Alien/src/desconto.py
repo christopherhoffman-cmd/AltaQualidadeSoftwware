@@ -1,22 +1,42 @@
 from abc import ABC, abstractmethod
 
-class Desconto(ABC):
+
+class IDesconto(ABC):
+
     @abstractmethod
-    def calcular_desconto(self, preco):
+    def calcular(self, valor):
+        pass
+
+class ICupom(ABC):
+
+    @abstractmethod
+    def aplicar_cupom(self, codigo):
+        pass
+
+class IVIP(ABC):
+
+    @abstractmethod
+    def validar_usuario_vip(self, usuario):
         pass
 
 
-class DescontoNormal(Desconto):
-    def calcular_desconto(self, preco):
-        return preco * 0.1
+class DescontoNormal(IDesconto):
+    def calcular(self, valor):
+        return valor * 0.1
 
-class DescontoVIP(Desconto): 
-    def calcular_desconto(self, preco):
-        return preco * 0.2
+class DescontoVIP(IDesconto, ICupom, IVIP):
 
+    def calcular(self, valor):
+        return valor * 0.2
 
-class DescontoPremium(Desconto):
-    def calcular_desconto(self, preco):
-        return preco * 0.3
+    def aplicar_cupom(self, codigo):
+        return True
 
+    def validar_usuario_vip(self, usuario):
+        return usuario == "vip"
+
+class DescontoPremium(IDesconto):
+
+    def calcular(self, valor):
+        return valor * 0.3
 
