@@ -1,26 +1,55 @@
-from src.controllers.pedido_controller import PedidoController
-from src.repositories.pedido_repository import PedidoRepository
-from src.services.pedido_service import PedidoService
-from src.database.connection import DatabaseConnection
-from src.models.pedido import Pedido
-from src.models.desconto import DescontoNormal, DescontoVIP, DescontoPremium
+from src.app.frameworks.database.memory_database import MemoryDatabase
+from src.app.adapters.repositories.memory_pedido_repository import MemoryPedidoRepository
+from src.app.use_cases.criar_pedido import CriarPedido
+from src.app.adapters.controllers.pedido_controller import PedidoController
 
 
 if __name__ == "__main__":
-    database = DatabaseConnection()
-    repo = PedidoRepository(database)
-    service = PedidoService(repo)
-    controller = PedidoController(service)
 
-    pedido1 = Pedido("Cliente 1", DescontoNormal())
-    pedido1.valor_original = 100.0
-    pedido2 = Pedido("Cliente 2", DescontoVIP())
-    pedido2.valor_original = 100.0
-    pedido3 = Pedido("Cliente 3", DescontoPremium())
-    pedido3.valor_original = 100.0
+    # Banco de dados
+    database = MemoryDatabase()
 
-    controller.adicionar_pedido(pedido1)
-    controller.adicionar_pedido(pedido2)
-    controller.adicionar_pedido(pedido3)
+    # Repository
+    repository = MemoryPedidoRepository(database)
 
-    controller.processar_pedidos()
+    # Use Case
+    criar_pedido = CriarPedido(repository)
+
+    # Controller
+    controller = PedidoController(criar_pedido)
+
+    # Criando pedidos através do Controller
+    controller.criar_pedido(
+        "Cliente 1",
+        100.0,
+        "normal"
+    )
+
+    controller.criar_pedido(
+        "Cliente 2",
+        100.0,
+        "vip"
+    )
+
+    controller.criar_pedido(
+        "Cliente 3",
+        100.0,
+        "premium"
+    )
+
+    # Listando os pedidos
+    pedidos = controller.listar_pedidos()
+
+    print("\n========== PEDIDOS REGISTRADOS ==========\n")
+
+    for pedido in pedidos:
+        tipo_desconto = pedido.desconto.__class__.__name__.replace("Desconto", "")
+
+        print(f"Cliente: {pedido.cliente}")
+        print(f"Tipo de desconto: {tipo_desconto}")
+        print(f"Valor original: R$ {pedido.valor_original:.2f}")
+        print(f"Valor do desconto: R$ {pedido.valor_desconto():.2f}")
+        print(f"Valor final: R$ {pedido.valor_final():.2f}")
+        print("-----------------------------------------")
+
+    print(f"Total de pedidos: {len(pedidos)}")
