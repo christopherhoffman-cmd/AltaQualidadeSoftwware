@@ -1,6 +1,6 @@
 import abc
 
-from libcst import List
+from typing import List
 from src.app.entities.pedido import Pedido
 
 
