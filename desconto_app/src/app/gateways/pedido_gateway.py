@@ -1,14 +1,12 @@
 import abc
-
-from typing import List
 from src.app.entities.pedido import Pedido
 
 
 class IPedidoGateway(abc.ABC):
     @abc.abstractmethod
-    def salvar(self, pedido: Pedido) -> None:
+    def salvar(self, pedido: Pedido, tipo_desconto: str) -> None:
         pass
 
     @abc.abstractmethod
-    def listar(self) -> List[Pedido]:
+    def listar(self) -> list[Pedido]:
         pass
